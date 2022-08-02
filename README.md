@@ -180,7 +180,7 @@ if not exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\%~nx0" (
 
 call %INSTALL_PATH%\venv\Scripts\activate.bat
 cd %INSTALL_PATH%
-git checkout
+git pull
 cd inceptor
 waitress-serve --listen *:8080 server:app
 ```
