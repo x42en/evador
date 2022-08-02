@@ -69,9 +69,6 @@ class Evador:
         if params['transformer'] not in TRANSFORMERS:
             raise UnsupportedOperation('Invalid transformer param')
         
-        if params['process'] is None:
-            raise UnsupportedOperation('Missing process name params')
-        
         params['arch'] = data.get('arch', 'x64')
         if params['arch'] not in ARCHITECTURES:
             raise UnsupportedOperation('Invalid architecture param')
@@ -111,6 +108,9 @@ class Evador:
     def generate_native(self, binary_path, data):
         # Lookup Binary params
         params = self.__validate_binary_params(binary_path, data)
+        # Extract check flag
+        check_flag = params['check']
+        del params['check']
         
         params['dll'] = bool(data.get('dll', False))
         params['exports'] = data.get('exports')
@@ -124,22 +124,30 @@ class Evador:
             raise UnsupportedOperation("Native DLLs require to specify an exported function")
         
         self.generator = NativeArtifactGenerator(binary_path, **params)
-        return self.__generate(params['outfile'], check=params['check'])
+        return self.__generate(params['outfile'], check=check_flag)
     
     def generate_dotnet(self, binary_path, data):
         # Lookup Binary params
         params = self.__validate_binary_params(binary_path, data)
+        
+        # Extract check flag
+        check_flag = params['check']
+        del params['check']
         
         (_, ext) = os.path.splitext(binary_path)
         if ext == "dll" and isDotNet(binary_path) and not (params.get('function', False) and params.get('classname', False)):
             raise UnsupportedOperation(".NET DLLs require to specify both class and method names")
 
         self.generator = DotNetArtifactGenerator(binary_path, **params)
-        return self.__generate(params['outfile'], check=params['check'])
+        return self.__generate(params['outfile'], check=check_flag)
     
     def generate_powershell(self, binary_path, data):
         # Lookup Common params
         params = self.__validate_common_params(binary_path, data)
         
+        # Extract check flag
+        check_flag = params['check']
+        del params['check']
+        
         self.generator = PowerShellArtifactGenerator(binary_path, **params)
-        return self.__generate(params['outfile'], check=params['check'])
+        return self.__generate(params['outfile'], check=check_flag)
