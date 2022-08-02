@@ -20,7 +20,7 @@ def send_error(msg):
     """
     return jsonify({'status': 'error', 'message': str(msg)})
 
-def send_binary(binary_path, binary_name):
+def send_binary(binary_path):
     # Load target file in memory
     return_data = io.BytesIO()
     with open(binary_path, 'rb') as fo:
@@ -33,7 +33,7 @@ def send_binary(binary_path, binary_name):
     os.remove(binary_path)
 
     # Send it back to user
-    return send_file(return_data, mimetype="binary/octet-stream", as_attachment=True, attachment_filename=binary_name)
+    return send_file(return_data, mimetype="binary/octet-stream")
 
 @public_api.before_request
 def before_request_callback():
@@ -101,7 +101,7 @@ def evade_native():
     except Exception as err:
         return send_error(err)
     
-    return send_binary(data['outfile'], global_vars.source_name)
+    return send_binary(data['outfile'])
 
 @public_api.route('/dotnet', methods=['POST'])
 def evade_dotnet():
@@ -114,7 +114,7 @@ def evade_dotnet():
     except Exception as err:
         return send_error(err)
     
-    return send_binary(data['outfile'], global_vars.source_name)
+    return send_binary(data['outfile'])
 
 @public_api.route('/powershell', methods=['POST'])
 def evade_powershell():
@@ -127,5 +127,5 @@ def evade_powershell():
     except Exception as err:
         return send_error(err)
     
-    return send_binary(data['outfile'], global_vars.source_name)
+    return send_binary(data['outfile'])
 
