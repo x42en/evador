@@ -92,7 +92,7 @@ def check_file():
 
 @public_api.route('/native', methods=['POST'])
 def evade_native():
-    data = request.form
+    data = request.form.to_dict(flat=False)
     # Override outfile
     data['outfile'] = global_vars.dest_path
 
@@ -105,7 +105,7 @@ def evade_native():
 
 @public_api.route('/dotnet', methods=['POST'])
 def evade_dotnet():
-    data = request.form
+    data = request.form.to_dict(flat=False)
     # Override outfile
     data['outfile'] = global_vars.dest_path
 
@@ -118,7 +118,7 @@ def evade_dotnet():
 
 @public_api.route('/powershell', methods=['POST'])
 def evade_powershell():
-    data = request.form
+    data = request.form.to_dict(flat=False)
     # Override outfile
     data['outfile'] = global_vars.dest_path
     
