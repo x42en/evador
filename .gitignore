@@ -5,3 +5,13 @@ dist
 *.spec
 .idea
 !metrics/cloc.exe
+
+# Remove sensible data
+config.yaml
+
+# Remove log
+evador.log*
+
+# Remove poetry config
+poetry.lock
+pyproject.toml

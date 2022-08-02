@@ -20,7 +20,11 @@ class ThreatCheck:
         if not os.path.isfile(filename):
             Console.auto_line(f"[-] ThreatCheck: File {filename} not found")
             sys.exit(1)
+        
+        results = dict()
+
         for engine in self.engines:
+            results[engine] = False
             try:
                 cmd = f"\"{self.path}\" -f {filename} -e {engine}"
                 if self.debug:
@@ -28,6 +32,7 @@ class ThreatCheck:
                 output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode().rstrip()
                 if output.find("No threat found") >= 0:
                     Console.auto_line(f"  [+] SUCCESS: {engine} Bypassed!")
+                    results[engine] = True
                 elif output.find("Ensure real-time protection is enabled") >= 0:
                     Console.auto_line("  [#] UNKNOWN: Real-Time Protection Disabled")
                 else:
@@ -38,3 +43,5 @@ class ThreatCheck:
                         Console.auto_line(f"  [-] Error: {line}")
                         continue
         Console.auto_line(f"[+] ThreatCheck Scan Finished At {datetime.utcnow()}")
+
+        return results
