@@ -169,6 +169,24 @@ python update-config.py
 ```
 <!-- installstop -->
 
+## Install server startup script
+Save the following script as `evador.bat` in your install
+```batch
+@ECHO OFF
+
+if not exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\%~nx0" (
+  copy "%~f0" "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\"
+)
+
+call %INSTALL_PATH%\venv\Scripts\activate.bat
+cd %INSTALL_PATH%
+git checkout
+cd inceptor
+waitress-serve --listen *:8080 server:app
+```
+
+Just execute it, and it will auto install itself to `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\evador.bat`
+
 ## Useful Notes
 
 #### Default Loaders
